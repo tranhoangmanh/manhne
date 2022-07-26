@@ -61,7 +61,7 @@ public class HomeController {
     public String adminPage(HttpSession session, Model model) {
         UserDTO userDTO = (UserDTO) session.getAttribute("userLogin");
         model.addAttribute("userDTO", userDTO);
-        List<RoomEntity> allRooms = roomRepository.findAllByRoomRented(false);
+        List<RoomEntity> allRooms = roomRepository.findAll();
         model.addAttribute("allRooms", allRooms);
         model.addAttribute("roomDTO", new RoomDTO());
         return "admin_manage";
