@@ -108,7 +108,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/home", "/checkAuthen", "/fake-data",
                         "/no-permission", "/assets/**","/css/**","/fonts/**",
-                        "/images/**","/js/**", "/scss/**", "/page/**", "/cart/**").permitAll() // Không cần đăng nhập
+                        "/images/**","/js/**", "/scss/**", "/page/**", "/cart/**", "/place-order").permitAll() // Không cần đăng nhập
                 // Còn đâu phải đăng nhập
                 .anyRequest()
                 .authenticated()

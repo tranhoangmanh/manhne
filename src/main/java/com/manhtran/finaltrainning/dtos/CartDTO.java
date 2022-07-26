@@ -1,8 +1,16 @@
 package com.manhtran.finaltrainning.dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
 public class CartDTO {
     private List<CartItemDTO> items;
     private double total;
@@ -13,7 +21,7 @@ public class CartDTO {
     }
 
     public CartItemDTO getItem(RoomDTO roomDTO){
-        for(CartItemDTO item : items){
+        for(CartItemDTO item : this.items){
             if(item.getRoomDTO().getId().equals(roomDTO.getId())){
                 return item;
             }
@@ -33,21 +41,23 @@ public class CartDTO {
         addItem(item.getRoomDTO(), item.getQuantity());
     }
 
-    public void addItem(RoomDTO productDAO, int quantity){
-        CartItemDTO item = getItem(productDAO);
+    public void addItem(RoomDTO roomDTO, int quantity){
+        CartItemDTO item = getItem(roomDTO);
         if(item != null){
             item.setQuantity(item.getQuantity() + quantity);
         }else {
-            item = new CartItemDTO(productDAO);
+            item = new CartItemDTO(roomDTO);
             item.setQuantity(quantity);
-            items.add(item);
+            this.items.add(item);
         }
+        this.total += roomDTO.getRoomPrice() * quantity;
     }
 
     public void updateItem(RoomDTO roomDTO, int quantity){
         CartItemDTO item = getItem(roomDTO);
         if(item != null){
             item.setQuantity(quantity);
+            this.total += roomDTO.getRoomPrice() * quantity;
         }
     }
 

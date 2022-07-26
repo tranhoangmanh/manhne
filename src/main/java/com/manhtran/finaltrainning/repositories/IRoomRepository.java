@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface IRoomRepository extends JpaRepository<RoomEntity, Long> {
     List<RoomEntity> findAllByRoomNameContainsIgnoreCase(String roomName);
+
+    List<RoomEntity> findAllByRoomRented(boolean roomRented);
 }

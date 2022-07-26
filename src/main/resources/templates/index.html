@@ -26,7 +26,6 @@
                         <li class="nav-item dropdown" th:if="${userResponse} != null">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="'Xin chào ' + ${userResponse.username}"></a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-<!--                                <li> <a class="dropdown-item" th:href="@{/logout}" th:action="@{/logout}" role="button" method="post">Thoát</a></li>-->
                                 <form th:action="@{/logout}" method="post">
                                     <input type="submit" value="Thoát" align="center"/>
                                 </form>

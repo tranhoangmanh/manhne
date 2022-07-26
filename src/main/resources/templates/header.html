@@ -14,6 +14,7 @@
         </ul>
         <a th:href="@{/admin/login}" class="btn btn-danger navbar-btn" role="button">Trang quản lý</a>
         <a th:href="@{/cart}" class="btn btn-danger navbar-btn" role="button">Giỏ hàng</a>
-        <span>0</span> <span> sản phẩm</span> <span>tiền</span> <span> đồng</span>
+        <span th:text="${session.gioHang.items.size()}"></span> <span> sản phẩm</span>
+        <span th:text="${session.gioHang.total}"></span> <span> đồng</span>
     </div>
 </nav>

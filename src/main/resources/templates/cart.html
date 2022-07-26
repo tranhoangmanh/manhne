@@ -10,41 +10,43 @@
 </head>
 <body>
 <header th:insert="header.html"></header>
-<h2>Tổng tiền: <span th:text="${session.gioHang.total}"/></h2>
+<h2>Tổng tiền: <span th:text="${session.gioHang.total} + ' đồng'"/></h2>
 <table class="table table-hover">
     <thead>
     <th>Mã phòng</th>
     <th>Tên</th>
     <th>Ảnh</th>
     <th>Giá thuê</th>
-    <th>Xoá</th>
+    <th>Số ngày thuê</th>
+    <th>Tổng tiền</th>
+    <th></th>
+    <th></th>
     </thead>
 
     <tbody>
     <tr th:each="r: ${session.gioHang.items}">
         <td th:text="${r.roomDTO.id}"></td>
         <td th:text="${r.roomDTO.roomName}"></td>
-        <td><img th:src="@{|/images/${r.roomDTO.roomImage}|}" width="80px" height="80px" th:alt="${p.pImage}"/></td>
+        <td>
+            <img th:src="@{|/images/${r.roomDTO.roomImage}|}" width="80px" height="80px"
+                 th:alt="${r.roomDTO.roomImage}"/></td>
         <td th:text="${r.roomDTO.roomPrice}"></td>
         <td>
-            <form th:action="${/cart/update}" method="post">
+            <form th:action="@{/cart/update}" method="get">
                 <input type="hidden" th:value="${r.roomDTO.id}" name="id"/>
                 <input type="number" min="1" th:value="${r.quantity}" name="qty"/>
-                <button type="submit">Cập nhật</button>
+                <button class="btn btn-primary" type="submit">Cập nhật</button>
             </form>
         </td>
         <td th:text="${r.subTotal}"></td>
         <td>
-            <form th:action="${/cart/remove}" method="post">
-                <input type="hidden" th:value="${r.roomDTO.id}" name="id"/>
-                <button type="submit">Xoá</button>
-            </form>
-        </td>
-        <td><a class="btn btn-danger" role="button" th:href="@{/remove?id={id}(id=${r.roomDTO.id})}">Xoá</a>
+            <a class="btn btn-danger" role="button" th:href="@{/cart/remove?id={id}(id=${r.roomDTO.id})}">
+                Xoá</a>
         </td>
     </tr>
     </tbody>
 </table>
+<a class="btn btn-success" role="button" th:href="@{/place-order}" style="text-align: center">Hoàn tất đặt phòng</a>
 <footer th:insert="footer.html"></footer>
 </body>
 </html>

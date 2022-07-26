@@ -1,6 +1,7 @@
 package com.manhtran.finaltrainning.controllers;
 
 import com.manhtran.finaltrainning.dtos.CartDTO;
+import com.manhtran.finaltrainning.dtos.CartItemDTO;
 import com.manhtran.finaltrainning.dtos.RoomDTO;
 import com.manhtran.finaltrainning.dtos.UserDTO;
 import com.manhtran.finaltrainning.entities.RoleEntity;
@@ -60,7 +61,7 @@ public class HomeController {
     public String adminPage(HttpSession session, Model model) {
         UserDTO userDTO = (UserDTO) session.getAttribute("userLogin");
         model.addAttribute("userDTO", userDTO);
-        List<RoomEntity> allRooms = roomRepository.findAll();
+        List<RoomEntity> allRooms = roomRepository.findAllByRoomRented(false);
         model.addAttribute("allRooms", allRooms);
         model.addAttribute("roomDTO", new RoomDTO());
         return "admin_manage";
@@ -131,7 +132,7 @@ public class HomeController {
     public String userPage(HttpSession session, Model model) {
         UserDTO userDTO = (UserDTO) session.getAttribute("userLogin");
         model.addAttribute("userDTO", userDTO);
-        List<RoomEntity> allRooms = roomRepository.findAll();
+        List<RoomEntity> allRooms = roomRepository.findAllByRoomRented(false);
         model.addAttribute("allRooms", allRooms);
         model.addAttribute("userResponse", userDTO);
         model.addAttribute("countProductInCart", 0);
@@ -142,11 +143,25 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping(value = "/place-order")
+    public String placedOrder(HttpSession session){
+        CartDTO cartDTO = (CartDTO) session.getAttribute("gioHang");
+        if(cartDTO != null){
+            for(CartItemDTO item : cartDTO.getItems()){
+                RoomEntity roomEntity = roomRepository.findById(item.getRoomDTO().getId()).get();
+                roomEntity.setRoomRented(true);
+                roomRepository.save(roomEntity);
+            }
+        }
+        return "redirect:/";
+    }
+
     @GetMapping("/cart")
-    public String cart(Model model){
-        List<RoomEntity> allRooms = roomRepository.findAll();
-        model.addAttribute("allRooms", allRooms);
-        model.addAttribute("roomDTO", new RoomDTO());
+    public String cart(HttpSession session){
+        CartDTO cart = cartService.getCart(session);
+        if(cart.getItemCount() == 0){
+            session.setAttribute("gioHang", cart);
+        }
         return "cart";
     }
 
@@ -164,11 +179,11 @@ public class HomeController {
         roomDTO.setRoomImage(roomEntity.getRoomImage());
         roomDTO.setRoomPrice(roomEntity.getRoomPrice());
         cart.addItem(roomDTO, qty);
-
+        session.setAttribute("gioHang", cart);
         return "cart";
     }
 
-    @RequestMapping("/remove")
+    @GetMapping("/cart/remove")
     public String remove(HttpSession session,
                          @RequestParam("id") RoomDTO roomDTO){
         CartDTO cart = cartService.getCart(session);
@@ -176,11 +191,17 @@ public class HomeController {
         return "cart";
     }
 
-    @RequestMapping("/update")
+    @GetMapping("/cart/update")
     public String update(HttpSession session,
-                         @RequestParam("id") RoomDTO roomDTO,
+                         @RequestParam("id") Long id,
                          @RequestParam("qty") int qty){
         CartDTO cart = cartService.getCart(session);
+        RoomEntity roomEntity = this.roomRepository.findById(id).get();
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setId(roomEntity.getId());
+        roomDTO.setRoomName(roomEntity.getRoomName());
+        roomDTO.setRoomImage(roomEntity.getRoomImage());
+        roomDTO.setRoomPrice(roomEntity.getRoomPrice());
         cart.updateItem(roomDTO, qty);
         return "cart";
     }
