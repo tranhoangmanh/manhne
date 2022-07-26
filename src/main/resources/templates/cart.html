@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <title>Giỏ hàng</title>
+</head>
+<body>
+<header th:insert="header.html"></header>
+<h2>Tổng tiền: <span th:text="${session.gioHang.total}"/></h2>
+<table class="table table-hover">
+    <thead>
+    <th>Mã phòng</th>
+    <th>Tên</th>
+    <th>Ảnh</th>
+    <th>Giá thuê</th>
+    <th>Xoá</th>
+    </thead>
+
+    <tbody>
+    <tr th:each="r: ${session.gioHang.items}">
+        <td th:text="${r.roomDTO.id}"></td>
+        <td th:text="${r.roomDTO.roomName}"></td>
+        <td><img th:src="@{|/images/${r.roomDTO.roomImage}|}" width="80px" height="80px" th:alt="${p.pImage}"/></td>
+        <td th:text="${r.roomDTO.roomPrice}"></td>
+        <td>
+            <form th:action="${/cart/update}" method="post">
+                <input type="hidden" th:value="${r.roomDTO.id}" name="id"/>
+                <input type="number" min="1" th:value="${r.quantity}" name="qty"/>
+                <button type="submit">Cập nhật</button>
+            </form>
+        </td>
+        <td th:text="${r.subTotal}"></td>
+        <td>
+            <form th:action="${/cart/remove}" method="post">
+                <input type="hidden" th:value="${r.roomDTO.id}" name="id"/>
+                <button type="submit">Xoá</button>
+            </form>
+        </td>
+        <td><a class="btn btn-danger" role="button" th:href="@{/remove?id={id}(id=${r.roomDTO.id})}">Xoá</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<footer th:insert="footer.html"></footer>
+</body>
+</html>

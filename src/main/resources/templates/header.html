@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Mạnh nè</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Trang chủ</a></li>
+            <li th:each="c : ${listCat}">
+                <a th:href="@{/getP/?id={id}(id=${c.type})}">
+                    <span th:text="${c.name}"/><span class="caret"></span>
+                </a>
+            </li>
+        </ul>
+        <a th:href="@{/admin/login}" class="btn btn-danger navbar-btn" role="button">Trang quản lý</a>
+        <a th:href="@{/cart}" class="btn btn-danger navbar-btn" role="button">Giỏ hàng</a>
+        <span>0</span> <span> sản phẩm</span> <span>tiền</span> <span> đồng</span>
+    </div>
+</nav>
