@@ -64,6 +64,7 @@ public class HomeController {
         List<RoomEntity> allRooms = roomRepository.findAll();
         model.addAttribute("allRooms", allRooms);
         model.addAttribute("roomDTO", new RoomDTO());
+        RoomDTO roomDTO = new RoomDTO();
         return "admin_manage";
     }
 
